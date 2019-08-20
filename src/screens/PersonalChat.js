@@ -8,7 +8,7 @@ import firebase from 'firebase'
 export default class App extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
-            title: navigation.getParam('email', null)
+            title: 'Personal'
         }
     }
 
@@ -16,7 +16,8 @@ export default class App extends Component {
         super(props);
         this.state = {
             person: {
-                email: props.navigation.getParam('email')
+                userid: props.navigation.getParam('userid'),
+                name: props.navigation.getParam('name')
             },
             textMessage: '',
             messageList: []

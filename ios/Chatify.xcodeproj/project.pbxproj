@@ -74,6 +74,7 @@
 		8693B29CF9E24999B50527BF /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8957760DF9B148B89F03CD23 /* Roboto-Thin.ttf */; };
 		6422368298A543CD96AB84FB /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE4AB194071746E5B5D532C8 /* Roboto-ThinItalic.ttf */; };
 		58DDCFA37F55406386D8DAA4 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD1F00D73E2245ACBAE4CC3B /* libAirMaps.a */; };
+		DF845239B8BF47D19D07A867 /* libReactNativeGetLocationLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF46F6B65076441EB2D1AD6F /* libReactNativeGetLocationLibrary.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -420,6 +421,8 @@
 		BE4AB194071746E5B5D532C8 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; name = "Roboto-ThinItalic.ttf"; path = "../fonts/Roboto/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		5B8778D87D00472DB11BAAEC /* AirMaps.xcodeproj */ = {isa = PBXFileReference; name = "AirMaps.xcodeproj"; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		DD1F00D73E2245ACBAE4CC3B /* libAirMaps.a */ = {isa = PBXFileReference; name = "libAirMaps.a"; path = "libAirMaps.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		3B7F873AB0A7406EB0962373 /* ReactNativeGetLocation.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativeGetLocation.xcodeproj"; path = "../node_modules/react-native-get-location/ios/ReactNativeGetLocation.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		AF46F6B65076441EB2D1AD6F /* libReactNativeGetLocationLibrary.a */ = {isa = PBXFileReference; name = "libReactNativeGetLocationLibrary.a"; path = "libReactNativeGetLocationLibrary.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -452,6 +455,7 @@
 				4802E96F8B3441BA93844E7F /* libRNGestureHandler.a in Frameworks */,
 				EDA27190C6744B968F80225D /* libRNVectorIcons.a in Frameworks */,
 				58DDCFA37F55406386D8DAA4 /* libAirMaps.a in Frameworks */,
+				DF845239B8BF47D19D07A867 /* libReactNativeGetLocationLibrary.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,6 +652,7 @@
 				B09D06E6B8C0419C8BB7694D /* RNGestureHandler.xcodeproj */,
 				B6798EEEEE164BE9A2791494 /* RNVectorIcons.xcodeproj */,
 				5B8778D87D00472DB11BAAEC /* AirMaps.xcodeproj */,
+				3B7F873AB0A7406EB0962373 /* ReactNativeGetLocation.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1347,6 +1352,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1354,6 +1360,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-get-location\ios\ReactNativeGetLocationLibrary",
 				);
 			};
 			name = Debug;
@@ -1382,6 +1389,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1389,6 +1397,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-get-location\ios\ReactNativeGetLocationLibrary",
 				);
 			};
 			name = Release;
@@ -1415,6 +1424,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-get-location\ios\ReactNativeGetLocationLibrary",
 				);
 			};
 			name = Debug;
@@ -1440,6 +1450,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-get-location\ios\ReactNativeGetLocationLibrary",
 				);
 			};
 			name = Release;
@@ -1476,6 +1487,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1483,6 +1495,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-get-location\ios\ReactNativeGetLocationLibrary",
 				);
 			};
 			name = Debug;
@@ -1519,6 +1532,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1526,6 +1540,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-get-location\ios\ReactNativeGetLocationLibrary",
 				);
 			};
 			name = Release;
@@ -1561,6 +1576,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1568,6 +1584,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-get-location\ios\ReactNativeGetLocationLibrary",
 				);
 			};
 			name = Debug;
@@ -1603,6 +1620,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1610,6 +1628,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-get-location\ios\ReactNativeGetLocationLibrary",
 				);
 			};
 			name = Release;

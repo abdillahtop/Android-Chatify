@@ -1,24 +1,15 @@
-import firebase from 'firebase';
+import Firebase from 'firebase';
 
-class Fire {
-    constructor() {
-      this.init();
-      // this.observeAuth();
-    }
-  
-    init = () => {
-      if (!firebase.apps.length) {
-        firebase.initializeApp({
-          apiKey            : '*****', //your apiKey firebase
-          authDomain        : '*****', //your autDomian
-          databaseURL       : '*****', //your databaseURL
-          projectId         : '*****', //your projectId
-          storageBucket     : '',
-          messagingSenderId : '*****', //your MessagingSenderId
-        });
-      }
-    };
-} 
+let config = {
+  apiKey: "AIzaSyCadzINZnyDcVDpwjuQXh5H4RiCu9hgEys",
+  authDomain: "chatify-d30d5.firebaseapp.com",
+  databaseURL: "https://chatify-d30d5.firebaseio.com",
+  projectId: "chatify-d30d5",
+  storageBucket: "",
+  messagingSenderId: "752254279622",
+}
 
-Fire.shared = new Fire();
-export default Fire;
+let app = Firebase.initializeApp(config);
+
+export const Database = app.database();
+export const Auth = app.auth();

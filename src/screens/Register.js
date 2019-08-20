@@ -1,37 +1,81 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, TouchableOpacity, Image, StyleSheet, StatusBar } from 'react-native'
+import GetLocation from 'react-native-get-location'
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import firebase from 'firebase'
+import { Database, Auth } from '../config/firebase'
 
 export default class Login extends Component {
     state = {
         name: '',
         email: '',
         password: '',
-        place: ''
+        latitude: null,
+        longitude: null
     }
 
     handleChange = key => val => {
         this.setState({ [key]: val })
     }
 
-    errorRegister = async (error) => {
-        alert.alert('Error', error.message)
-    }
+    registerForm = async () => {
+        if (this.state.name === '' || this.state.email === '' || this.state.password === '') {
+            alert('please insert in form')
+        } else if (this.state.name < 4) {
+            alert('Username must more than 3 character')
+        } else {
+            Auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
+                .then((response) => {
+                    console.warn(response)
+                    Database.ref('/users/' + response.user.uid).set({
+                        name: this.state.name,
+                        email: this.state.email,
+                        status: 'offline',
+                        avatar: 'https://image.flaticon.com/icons/svg/149/149071.svg',
+                        latitude: this.state.latitude,
+                        longitude: this.state.longitude
+                    })
+                    this.props.navigation.navigate('Login')
+                })
+                .catch(error => {
+                    alert(error.message)
+                    this.setState({
+                        fullname: '',
+                        email: '',
+                        password: ''
+                    })
 
-    successRegister = async (data) => {
-        if (this.state.profile) {
-
+                    this.props.navigation.navigate('Register')
+                })
         }
     }
 
-    submitRegister = async () => {
-        let email = this.state.email
-        let password = this.state.password
-        await firebase.auth()
-            .createUser(email, password)
-            .then()
+    getCurrentPosition() {
+        GetLocation.getCurrentPosition({
+            enableHighAccuracy: true,
+            timeout: 15000,
+        })
+            .then(location => {
+                console.warn(location.latitude);
+
+                let region = {
+                    latitude: location.latitude,
+                    longitude: location.longitude,
+                    latitudeDelta: 0.00922 * 1.5,
+                    longitudeDelta: 0.00421 * 1.5
+                }
+
+                this.setState({
+                    mapRegion: region,
+                    latitude: location.latitude,
+                    longitude: location.longitude
+                })
+            })
+            .catch(error => {
+                const { code, message } = error;
+                console.warn(code, message);
+            })
     }
 
     render() {
@@ -46,9 +90,9 @@ export default class Login extends Component {
                         } > REGISTER</Text>
                     </View>
                     <View style={styles.layInput}>
-                        <TouchableOpacity style={styles.layImage}>
+                        {/* <TouchableOpacity style={styles.layImage}>
                             <Image style={styles.image} source={require('../assets/user.png')} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <View style={{ flexDirection: 'row' }}>
                             <Icon size={24} name={'md-person'} style={styles.icon} />
                             <TextInput
@@ -77,19 +121,10 @@ export default class Login extends Component {
                                 onChangeText={this.handleChange('password')}
                             />
                         </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Icon size={24} name={'md-business'} style={styles.icon} />
-                            <TextInput
-                                placeholder="Place"
-                                style={styles.input}
-                                value={this.state.place}
-                                onChangeText={this.handleChange('place')}
-                            />
-                        </View>
                     </View >
                     <View style={{ alignItems: 'center' }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity style={styles.butRegist}>
+                            <TouchableOpacity style={styles.butRegist} onPress={this.registerForm}>
                                 <Text style={styles.textSignUp}>Sign Up</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.butLogin} onPress={() => this.props.navigation.navigate('Login')}>

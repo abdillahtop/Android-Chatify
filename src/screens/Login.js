@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, TouchableOpacity, Image, StyleSheet, StatusBar, Alert, AsyncStorage } from 'react-native'
-import User from '../User'
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
-import firebase from 'firebase'
+import { Auth, Database } from '../config/firebase'
 
 export default class Login extends Component {
-    state = {
-        email: '',
-        password: ''
+    constructor() {
+        super()
+        this.state = {
+            email: '',
+            password: ''
+        }
     }
 
     handleChange = key => val => {
@@ -16,13 +18,39 @@ export default class Login extends Component {
     }
 
     loginFrom = async () => {
-        if (this.state.password.length < 5) {
+        const { email, password } = this.state
+        if (email === '' || password === '') {
+            Alert.alert('Error', 'Please Insert in Form')
+        }
+        else if (this.state.password.length < 5) {
             Alert.alert('Error', 'Password Must more than 6 character')
         } else {
-            await AsyncStorage.setItem('Email', this.state.email);
-            User.email = this.state.email;
-            firebase.database().ref('users/' + User.email).set({ email: this.state.email })
-            this.props.navigation.navigate('Home')
+            Database.ref('/users').orderByChild('email').equalTo(email).once('value', (result) => {
+                let data = result.val()
+                console.warn("datanya: ", data)
+
+                if (data !== null) {
+                    let user = Object.values(data)
+                    console.warn("user aja", user)
+                    AsyncStorage.setItem('userdata', user[0].email)
+                }
+            })
+
+            await Auth.signInWithEmailAndPassword(email, password)
+                .then((response) => {
+                    console.warn("hasil response", response)
+                    Database.ref('/users/' + response.user.uid).update({ status: 'online' })
+                    AsyncStorage.setItem('userid', response.user.uid)
+                    AsyncStorage.setItem('email', response.user.email)
+                    this.props.navigation.navigate('Home')
+                })
+                .catch((error) => {
+                    Alert.alert('Error', error.message)
+                    this.setState({
+                        email: '',
+                        password: ''
+                    })
+                })
         }
     }
 

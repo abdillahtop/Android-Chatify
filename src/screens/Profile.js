@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, AsyncStorage, TouchableOpacity } from 'react-native';
-import User from '../User'
+import { Auth, Database } from '../config/firebase'
 
 export default class App extends Component {
 
     _logOut = async () => {
-        await AsyncStorage.clear();
-        this.props.navigation.navigate('SplashScreen')
+        const userToken = await AsyncStorage.getItem('userid')
+        Database.ref('/users/' + userToken).update({ status: 'offline' })
+        Auth.signOut().then(() => {
+            AsyncStorage.clear();
+            this.props.navigation.navigate('SplashScreen')
+        })
+            .catch((error) => {
+                alert('error', error.message)
+            })
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text>
-                    {User.email}
-                </Text>
+                {
+                    console.warn("")
+                }
                 <TouchableOpacity onPress={this._logOut}>
                     <Text>Logout</Text>
                 </TouchableOpacity>

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, StatusBar, Image, FlatList } from 'react-native
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase'
 import Icon from 'react-native-vector-icons/Ionicons';
-import user from '../User';
+import User from '../User';
 
 export default class App extends Component {
     constructor() {

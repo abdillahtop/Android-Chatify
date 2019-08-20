@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, StatusBar, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, FlatList, AsyncStorage } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase'
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -31,13 +31,16 @@ export default class Firendlist extends Component {
 
     // }
 
-    componentWillMount() {
+    componentWillMount = async () => {
         let dbRef = firebase.database().ref('users');
+        // console.warn("dbref", dbRef)
+        let email = await AsyncStorage.getItem('email');
         dbRef.on('child_added', (val) => {
             let person = val.val();
-            person.email = val.key;
-            if (person.email === user.email) {
-                user.email = person.email
+            console.warn("person", person.email.toLowerCase())
+            console.warn("email", email)
+            if (person.email.toLowerCase() === email) {
+                email = person.email.toLowerCase()
             } else {
                 this.setState((prevState) => {
                     return {
@@ -64,7 +67,7 @@ export default class Firendlist extends Component {
     // );
 
     renderRow = ({ item }) => {
-        // console.warn("item", item)
+        console.warn("item", item)
         return (
             <TouchableOpacity
                 style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}
@@ -72,13 +75,13 @@ export default class Firendlist extends Component {
                 <View>
                     <Image style={{ height: 60, width: 60, borderRadius: 50 }} source={require('../assets/user.png')} />
                 </View>
-                <Text style={styles.name}>{item.email}</Text>
+                <Text style={styles.name}>{item.name}</Text>
             </TouchableOpacity>
         )
     }
 
     render() {
-        // console.warn("users", this.state.users)
+        console.warn("users", this.state.users)
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor="white" barStyle="dark-content" />

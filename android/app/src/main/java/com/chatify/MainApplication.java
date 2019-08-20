@@ -3,6 +3,7 @@ package com.chatify;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.github.douglasjunior.reactNativeGetLocation.ReactNativeGetLocationPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeGetLocationPackage(),
             new MapsPackage(),
             new VectorIconsPackage(),
             new RNGestureHandlerPackage(),
