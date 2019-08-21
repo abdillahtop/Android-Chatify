@@ -41,7 +41,7 @@ export default class Login extends Component {
                     console.warn("hasil response", response)
                     Database.ref('/users/' + response.user.uid).update({ status: 'online' })
                     AsyncStorage.setItem('userid', response.user.uid)
-                    AsyncStorage.setItem('email', response.user.email)
+                    AsyncStorage.setItem('phone', response.user.phone)
                     this.props.navigation.navigate('Home')
                 })
                 .catch((error) => {

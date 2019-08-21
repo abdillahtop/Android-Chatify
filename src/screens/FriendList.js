@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, StatusBar, Image, FlatList, AsyncStorage } from
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import firebase from 'firebase'
 import Icon from 'react-native-vector-icons/Ionicons';
-import user from '../User';
 
 export default class Firendlist extends Component {
     constructor() {
@@ -14,33 +13,16 @@ export default class Firendlist extends Component {
         }
     }
 
-    // componentDidMount() {
-    //     this.setState({ isLoading: true }, this.getData)
-    // }
-
-    // getData = async () => {
-    //     const url = 'https://jsonplaceholder.typicode.com/photos/?_limit=10'
-    //     fetch(url)
-    //         .then((response) => response.json())
-    //         .then((responseJson) => {
-    //             // console.warn('dari respon json', responseJson)
-    //             this.setState({
-    //                 data: responseJson
-    //             })
-    //         })
-
-    // }
-
     componentWillMount = async () => {
         let dbRef = firebase.database().ref('users');
         // console.warn("dbref", dbRef)
-        let email = await AsyncStorage.getItem('email');
+        let myid = await AsyncStorage.getItem('userid');
         dbRef.on('child_added', (val) => {
             let person = val.val();
-            console.warn("person", person.email.toLowerCase())
-            console.warn("email", email)
-            if (person.email.toLowerCase() === email) {
-                email = person.email.toLowerCase()
+            // console.warn("person", person)
+            // console.warn("email", myid)
+            if (person.id === myid) {
+                myid = person.id
             } else {
                 this.setState((prevState) => {
                     return {
@@ -51,50 +33,44 @@ export default class Firendlist extends Component {
         })
     }
 
-    // _renderItem = ({ item }) => (
-    //     <TouchableOpacity onPress={() => this.props.navigation.navigate('PersonalChat')}>
-    //         <View style={{ flexDirection: 'row', marginHorizontal: 10, marginBottom: 10 }}>
-    //             <View>
-    //                 <Image style={{ height: 60, width: 60, borderRadius: 50 }} source={{ uri: item.thumbnailUrl }} />
-    //             </View>
-    //             <View style={{ marginLeft: 10, width: 270 }}>
-    //                 <Text style={{ color: 'black' }}>{item.title}</Text>
-    //                 <Text style={{ color: 'black' }}>{item.title}</Text>
-    //             </View>
-    //             <View style={{ borderBottomWidth: 3, borderColor: 'black' }} />
-    //         </View>
-    //     </TouchableOpacity>
-    // );
-
     renderRow = ({ item }) => {
-        console.warn("item", item)
+        // console.warn("item", item)
+
         return (
             <TouchableOpacity
-                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}
+                style={styles.contact}
                 onPress={() => this.props.navigation.navigate('PersonalChat', item)}>
-                <View>
-                    <Image style={{ height: 60, width: 60, borderRadius: 50 }} source={require('../assets/user.png')} />
+                <View style={{ width: '20%' }}>
+                    <Image style={styles.image} source={{ uri: item.avatar }} />
                 </View>
-                <Text style={styles.name}>{item.name}</Text>
+                <View style={{ width: '50%', marginLeft: 10 }}>
+                    <Text style={styles.name}>{item.name}</Text>
+                    <Text style={styles.phone}>{item.phone}</Text>
+                </View>
+                {
+                    item.status === "online"
+                        ?
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon size={15} name={'md-radio-button-on'} style={styles.indicatorOn} />
+                            <Text style={{ color: 'green' }}>{item.status}</Text>
+                        </View>
+                        :
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon size={15} name={'md-radio-button-on'} style={styles.indicatorOff} />
+                            <Text>{item.status}</Text>
+                        </View>
+                }
             </TouchableOpacity>
         )
     }
 
     render() {
-        console.warn("users", this.state.users)
+        // console.warn("users", this.state.users)
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor="white" barStyle="dark-content" />
                 <View style={styles.header}>
-                    <View style={styles.headerLeft}>
-                        <Image style={styles.logo} source={require('../assets/logo.png')} />
-                        <Text style={styles.logoText}>Chatify</Text>
-                    </View>
-                    <View style={styles.headerRight} >
-                        <TouchableOpacity>
-                            <Icon size={30} name={'md-search'} style={styles.find} />
-                        </TouchableOpacity>
-                    </View>
+                    <Text style={styles.logoText}>Friend List</Text>
                 </View>
                 <FlatList
                     data={this.state.users}
@@ -119,32 +95,48 @@ const styles = StyleSheet.create({
         scaleX: 0.2,
         scaleY: 0.2
     },
-    logoText: {
-        marginLeft: -50,
-        fontWeight: '900',
-        marginTop: 13,
-        fontSize: 22,
-        color: '#333'
-    },
     header: {
-        height: 55,
+        height: 65,
         backgroundColor: 'white',
         elevation: 2,
+        alignItems: 'center',
+        width: '100%'
     },
-    headerLeft: {
-        flexDirection: "row"
-    },
-    headerRight: {
-        marginTop: -125,
-        marginRight: 20,
-        alignItems: 'flex-end'
+    logoText: {
+        fontWeight: '900',
+        marginTop: 15,
+        fontSize: 28,
+        alignItems: 'center',
+        color: '#333'
     },
     flatlist: {
         paddingVertical: 10,
     },
+    contact: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 0.4,
+        borderBottomColor: '#aaa',
+        paddingVertical: 10
+    },
+    image: {
+        height: 60,
+        width: 60,
+        borderRadius: 50
+    },
     name: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: '900',
-        marginLeft: 20
+        width: '50%',
+        color: '#666'
+    },
+    indicatorOn: {
+        color: 'green',
+        marginRight: 5
+    },
+    indicatorOff: {
+        color: 'grey',
+        marginRight: 5
     }
 });

@@ -65,6 +65,9 @@ const AppStack = createStackNavigator({
     },
     PersonalChat: {
         screen: PersonalChat,
+        navigationOptions: {
+            header: null,
+        }
     }
 });
 

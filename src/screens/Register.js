@@ -11,6 +11,7 @@ export default class Login extends Component {
         name: '',
         email: '',
         password: '',
+        phone: '',
         latitude: null,
         longitude: null
     }
@@ -29,8 +30,12 @@ export default class Login extends Component {
                 .then((response) => {
                     console.warn(response)
                     Database.ref('/users/' + response.user.uid).set({
+                        id: response.user.uid,
                         name: this.state.name,
                         email: this.state.email,
+                        phone: this.state.phone,
+                        latitude: 0,
+                        longitude: 0,
                         status: 'offline',
                         avatar: 'https://image.flaticon.com/icons/svg/149/149071.svg',
                         latitude: this.state.latitude,
@@ -43,7 +48,8 @@ export default class Login extends Component {
                     this.setState({
                         fullname: '',
                         email: '',
-                        password: ''
+                        password: '',
+                        phone: ''
                     })
 
                     this.props.navigation.navigate('Register')
@@ -109,6 +115,15 @@ export default class Login extends Component {
                                 style={styles.input}
                                 value={this.state.email}
                                 onChangeText={this.handleChange('email')}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon size={24} name={'md-phone-potrait'} style={styles.icon} />
+                            <TextInput
+                                placeholder="Phone"
+                                style={styles.input}
+                                value={this.state.phone}
+                                onChangeText={this.handleChange('phone')}
                             />
                         </View>
                         <View style={{ flexDirection: 'row' }}>
