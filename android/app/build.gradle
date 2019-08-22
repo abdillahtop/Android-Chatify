@@ -149,6 +149,8 @@ android {
 }
 
 dependencies {
+    implementation project(':rn-fetch-blob')
+    implementation project(':react-native-image-picker')
     implementation project(':react-native-get-location')
     implementation(project(':react-native-maps')){
       exclude group: 'com.google.android.gms'

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TextInput, AsyncStorage, Image } from 'react-native';
-import { TouchableOpacity, FlatList, ScrollView } from 'react-native-gesture-handler';
+import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import firebase from 'firebase'
 
@@ -24,12 +24,12 @@ export default class App extends Component {
     }
 
     convertTIme = (time) => {
-        let d = new Date(time)
-        let c = new Date()
-        let result = (d.getHours() < 10 ? '0' : '') + d.getHours() + ':'
-        result += (d.getMinutes() < 10 ? '0' : '') + d.getMinutes()
+        let d = new Date(time);
+        let c = new Date();
+        let result = (d.getHours() < 10 ? '0' : '') + d.getHours() + ':';
+        result += (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
         if (c.getDay() !== d.getDay()) {
-            result = d.getDay() + ' ' + d.getMonth() + '' + result;
+            result = d.getDay() + ' ' + d.getMonth() + ' ' + result;
         }
         return result;
     }
@@ -64,7 +64,7 @@ export default class App extends Component {
                     marginBottom: 10
                 }}
             >
-                <Text style={{ color: '#ff', padding: 7, fontSize: 16 }}>
+                <Text style={{ color: '#fff', padding: 7, fontSize: 16 }}>
                     {item.message}
                 </Text>
                 <Text style={{ color: '#eee', padding: 3, fontSize: 12 }}>
@@ -95,7 +95,6 @@ export default class App extends Component {
         // console.warn("item", this.state.status)
         return (
             <View style={styles.container}>
-                <StatusBar backgroundColor="white" barStyle="dark-content" />
                 <StatusBar backgroundColor="white" barStyle="dark-content" />
                 <View style={styles.header}>
                     <TouchableOpacity style={styles.arrow} onPress={() => this.props.navigation.navigate('Friend')}>
@@ -208,8 +207,9 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     autoText: {
-        padding: 5,
-        marginTop: -3,
+        paddingVertical: 3,
+        paddingHorizontal: 5,
+        marginTop: -1,
         marginRight: 10,
         borderWidth: 0.5,
         borderColor: 'white',

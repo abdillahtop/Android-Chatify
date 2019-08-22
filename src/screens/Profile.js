@@ -1,20 +1,39 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, AsyncStorage, TouchableOpacity, Image } from 'react-native';
-import firebase from 'firebase'
-import { Auth, Database } from '../config/firebase'
+import ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'rn-fetch-blob'
+import { Auth, Database, Storage } from '../config/firebase'
+
+const Blob = RNFetchBlob.polyfill.Blob
+const fs = RNFetchBlob.fs
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+window.Blob = Blob
 
 export default class App extends Component {
     constructor() {
         super()
         this.state = {
             data: [],
-            myid: ''
+            myid: '',
+            imgSource: '',
         }
         AsyncStorage.getItem('userid', (error, result) => {
             if (result) {
                 this.setState({
                     myid: result
                 })
+            }
+        })
+    }
+
+    handleChoosePhoto = () => {
+        const options = {
+            noData: true,
+        }
+
+        ImagePicker.showImagePicker(options, response => {
+            if (response.uri) {
+                this.setState({ imgSource: response })
             }
         })
     }
@@ -31,14 +50,12 @@ export default class App extends Component {
             })
     }
 
-    componentWillMount = async () => {
+    componentDidMount() {
         this.getData()
     }
 
     getData = async () => {
-        // console.warn("long", this.state.longitude)
-        // console.warn("lat", this.state.latitude)
-        let dbRef = firebase.database().ref('users');
+        let dbRef = Database.ref('users');
         let myid = await AsyncStorage.getItem('userid');
         dbRef.on('child_added', (val) => {
             let person = val.val();
@@ -54,16 +71,60 @@ export default class App extends Component {
         })
     }
 
+    uploadImage = (uri, imgSource, mime = 'image/jpg') => {
+        return new Promise((resolve, reject) => {
+            const uploadUri = uri
+            let uploadBlob = null
+
+            const imageRef = Storage.ref('posts').child(imgSource)
+            fs.readFile(uploadUri, 'base64')
+                .then((data) => {
+                    return Blob.build(data, { type: `${mime};BASE64` })
+                })
+                .then((blob) => {
+                    uploadBlob = blob
+                    return imageRef.put(blob, { contentType: mime })
+                })
+                .then(() => {
+                    uploadBlob.close()
+                    return imageRef.getDownloadURL()
+                })
+                .then((url) => {
+                    resolve(url)
+                    Database.ref('/users/' + this.state.myid).update({ avatar: url })
+                    this.setState({
+                        imgSource: ''
+                    })
+                    alert('Foto Profile Berhasil di update')
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    }
+
     render() {
-        console.warn("data yg ini", this.state.data)
+        const { imgSource } = this.state
         return (
             <View style={styles.container}>
                 {
                     this.state.data.map(user => {
-                        console.warn("data user ", user)
                         return (
                             <View style={styles.layProfile}>
-                                <Image style={styles.photo} source={{ uri: user.avatar }} />
+                                {
+                                    this.state.imgSource !== ''
+                                        ?
+                                        <View style={styles.layPhoto}>
+                                            <Image style={styles.photo} source={{ uri: imgSource.uri }} />
+                                        </View>
+                                        :
+                                        <View style={styles.layPhoto}>
+                                            <TouchableOpacity onPress={this.handleChoosePhoto}>
+                                                <Image style={styles.photo} source={{ uri: user.avatar }} />
+                                            </TouchableOpacity>
+                                        </View>
+                                }
+
                                 <View style={{ alignItems: 'center', marginTop: -30 }}>
                                     <View style={styles.information}>
                                         <View style={styles.layText}>
@@ -83,11 +144,18 @@ export default class App extends Component {
                                             <Text style={styles.textUser}>{user.phone}</Text>
                                         </View>
                                     </View>
-                                    <View style={styles.layLogout}>
-                                        <TouchableOpacity onPress={this._logOut}>
-                                            <Text style={styles.logout}>Logout</Text>
-                                        </TouchableOpacity>
-                                    </View>
+                                    {
+                                        this.state.imgSource === ''
+                                            ?
+                                            <TouchableOpacity onPress={this._logOut} style={styles.layLogout}>
+                                                <Text style={styles.logout}>Logout</Text>
+                                            </TouchableOpacity>
+                                            :
+                                            <TouchableOpacity onPress={() => this.uploadImage(imgSource.uri, imgSource.fileName)} style={styles.laySave}>
+                                                <Text style={styles.save}>Save</Text>
+                                            </TouchableOpacity>
+                                    }
+
                                 </View>
 
                             </View>
@@ -109,15 +177,19 @@ const styles = StyleSheet.create({
     layProfile: {
         width: '100%'
     },
-    logo: {
-        marginTop: -50,
-        scaleX: 0.4,
-        scaleY: 0.4
+    layPhoto: {
+        width: '100%',
+        height: '60%',
     },
     photo: {
         width: '100%',
-        height: '60%',
+        height: '100%',
         alignItems: 'center',
+    },
+    butSave: {
+        paddingHorizontal: 10,
+        backgroundColor: 'red',
+        flex: 1
     },
     textTag: {
         fontSize: 16,
@@ -160,6 +232,24 @@ const styles = StyleSheet.create({
         opacity: .85
     },
     logout: {
+        fontWeight: 'bold',
+        fontSize: 20,
+        color: 'white',
+        textAlign: 'center'
+    },
+    laySave: {
+        flexDirection: 'row',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        backgroundColor: 'green',
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+        width: '90%',
+        opacity: .85
+    },
+    save: {
         fontWeight: 'bold',
         fontSize: 20,
         color: 'white',

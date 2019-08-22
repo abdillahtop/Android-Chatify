@@ -8,20 +8,22 @@ import Home from '../screens/Home'
 import Login from '../screens/Login'
 import Nearby from '../screens/Nearby'
 import FriendList from '../screens/FriendList'
+import FriendProfile from '../screens/FriendProfile'
 import Profile from '../screens/Profile'
 import PersonalChat from '../screens/PersonalChat'
 import SplashScreen from '../screens/SplashScreen'
 import Register from '../screens/Register'
+import Tes from '../screens/tesupload'
 
 const BottomNavigator = createMaterialBottomTabNavigator({
-    Home: {
-        screen: Home,
-        navigationOptions: {
-            tabBarIcon: ({ tintColor }) => (
-                <Icon size={30} name={'md-home'} style={{ color: tintColor }} />
-            )
-        }
-    },
+    // Home: {
+    //     screen: Home,
+    //     navigationOptions: {
+    //         tabBarIcon: ({ tintColor }) => (
+    //             <Icon size={30} name={'md-home'} style={{ color: tintColor }} />
+    //         )
+    //     }
+    // },
     Nearby: {
         screen: Nearby,
 
@@ -50,7 +52,7 @@ const BottomNavigator = createMaterialBottomTabNavigator({
     }
 },
     {
-        initialRouteName: 'Home',
+        initialRouteName: 'Nearby',
         activeColor: 'green',
         inactiveColor: '#777',
         barStyle: { backgroundColor: '#fefefe' },
@@ -68,6 +70,12 @@ const AppStack = createStackNavigator({
         navigationOptions: {
             header: null,
         }
+    },
+    FriendProfile: {
+        screen: FriendProfile
+    },
+    Tes: {
+        screen: Tes
     }
 });
 

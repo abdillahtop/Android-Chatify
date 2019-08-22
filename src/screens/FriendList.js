@@ -74,7 +74,7 @@ export default class Firendlist extends Component {
                 </View>
                 <FlatList
                     data={this.state.users}
-                    keyExtractor={this._keyExtractor}
+                    keyExtractor={(item, index) => index.toString()}
                     renderItem={this.renderRow}
                     style={styles.flatlist}
                 />

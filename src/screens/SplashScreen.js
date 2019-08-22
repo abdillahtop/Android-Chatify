@@ -1,6 +1,5 @@
 import React from 'react'
 import { Image, Text, TouchableOpacity, StyleSheet, ActivityIndicator, AsyncStorage } from 'react-native'
-import firebase from 'firebase'
 
 export default class SplashScreen extends React.Component {
     constructor() {

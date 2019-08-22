@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Text, View, TextInput, TouchableOpacity, Image, StyleSheet, StatusBar } from 'react-native'
+import { Text, View, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native'
 import GetLocation from 'react-native-get-location'
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
-import firebase from 'firebase'
 import { Database, Auth } from '../config/firebase'
 
 export default class Login extends Component {
@@ -12,49 +11,12 @@ export default class Login extends Component {
         email: '',
         password: '',
         phone: '',
-        latitude: null,
-        longitude: null
+        latitude: 0,
+        longitude: 0
     }
 
-    handleChange = key => val => {
-        this.setState({ [key]: val })
-    }
-
-    registerForm = async () => {
-        if (this.state.name === '' || this.state.email === '' || this.state.password === '') {
-            alert('please insert in form')
-        } else if (this.state.name < 4) {
-            alert('Username must more than 3 character')
-        } else {
-            Auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
-                .then((response) => {
-                    console.warn(response)
-                    Database.ref('/users/' + response.user.uid).set({
-                        id: response.user.uid,
-                        name: this.state.name,
-                        email: this.state.email,
-                        phone: this.state.phone,
-                        latitude: 0,
-                        longitude: 0,
-                        status: 'offline',
-                        avatar: 'https://image.flaticon.com/icons/svg/149/149071.svg',
-                        latitude: this.state.latitude,
-                        longitude: this.state.longitude
-                    })
-                    this.props.navigation.navigate('Login')
-                })
-                .catch(error => {
-                    alert(error.message)
-                    this.setState({
-                        fullname: '',
-                        email: '',
-                        password: '',
-                        phone: ''
-                    })
-
-                    this.props.navigation.navigate('Register')
-                })
-        }
+    componentDidMount = async () => {
+        await this.getCurrentPosition()
     }
 
     getCurrentPosition() {
@@ -82,6 +44,45 @@ export default class Login extends Component {
                 const { code, message } = error;
                 console.warn(code, message);
             })
+    }
+
+    handleChange = key => val => {
+        this.setState({ [key]: val })
+    }
+
+    registerForm = async () => {
+        if (this.state.name === '' || this.state.email === '' || this.state.password === '') {
+            alert('please insert in form')
+        } else if (this.state.name < 4) {
+            alert('Username must more than 3 character')
+        } else {
+            Auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
+                .then((response) => {
+                    console.warn(response)
+                    Database.ref('/users/' + response.user.uid).set({
+                        id: response.user.uid,
+                        name: this.state.name,
+                        email: this.state.email,
+                        phone: this.state.phone,
+                        status: 'offline',
+                        avatar: "https://images-na.ssl-images-amazon.com/images/I/41W%2BB4m3WTL.jpg",
+                        latitude: this.state.latitude,
+                        longitude: this.state.longitude
+                    })
+                    this.props.navigation.navigate('Login')
+                })
+                .catch(error => {
+                    alert(error.message)
+                    this.setState({
+                        fullname: '',
+                        email: '',
+                        password: '',
+                        phone: ''
+                    })
+
+                    this.props.navigation.navigate('Register')
+                })
+        }
     }
 
     render() {
@@ -118,7 +119,7 @@ export default class Login extends Component {
                             />
                         </View>
                         <View style={{ flexDirection: 'row' }}>
-                            <Icon size={24} name={'md-phone-potrait'} style={styles.icon} />
+                            <Icon size={24} name={'md-phone-portrait'} style={styles.icon} />
                             <TextInput
                                 placeholder="Phone"
                                 style={styles.input}

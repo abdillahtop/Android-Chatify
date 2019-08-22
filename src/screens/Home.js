@@ -1,68 +1,52 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, StatusBar, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, FlatList, AsyncStorage } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import firebase from 'firebase'
+import { Auth, Database } from '../config/firebase'
 import Icon from 'react-native-vector-icons/Ionicons';
-import User from '../User';
 
 export default class App extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props);
         this.state = {
-            data: [],
-            users: []
+            users: [],
+            uid: null
         }
+
     }
 
-    componentDidMount() {
-        this.setState({ isLoading: true }, this.getData)
-    }
-
-    getData = async () => {
-        const url = 'https://jsonplaceholder.typicode.com/photos/?_limit=10'
-        fetch(url)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                // console.warn('dari respon json', responseJson)
-                this.setState({
-                    data: responseJson
+    componentWillMount = async () => {
+        let dbRef = Database.ref('users');
+        // console.warn("dbref", dbRef)
+        let myid = await AsyncStorage.getItem('userid');
+        dbRef.on('child_added', (val) => {
+            let person = val.val();
+            // console.warn("person", person)
+            // console.warn("email", myid)
+            if (person.id === myid) {
+                myid = person.id
+            } else {
+                this.setState((prevState) => {
+                    return {
+                        users: [...prevState.users, person]
+                    }
                 })
-            })
-
+            }
+        })
     }
 
+    renderRow = ({ item }) => {
+        return (
+            <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('PersonalChat', item)}
+                style={{ padding: 10, borderBottomColor: '#ccc', borderBottomWidth: 1 }}>
+                <Text style={{ fontSize: 20 }}>{item.name}</Text>
+            </TouchableOpacity>
+        )
+    }
 
-    _renderItem = ({ item }) => (
-        <TouchableOpacity>
-            <View style={{ flexDirection: 'row', marginHorizontal: 10, marginBottom: 10 }}>
-                <View>
-                    <Image style={{ height: 60, width: 60, borderRadius: 50 }} source={{ uri: item.thumbnailUrl }} />
-                </View>
-                <View style={{ marginLeft: 10, width: 270 }}>
-                    <Text style={{ color: 'black' }}>{item.title}</Text>
-                    <Text style={{ color: 'black' }}>{item.title}</Text>
-                </View>
-                <View style={{ borderBottomWidth: 3, borderColor: 'black' }} />
-            </View>
-        </TouchableOpacity>
-    );
-
-    // renderRow = ({ item }) => {
-    //     // console.warn("item", item)
-    //     return (
-    //         <TouchableOpacity
-    //             style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}
-    //             onPress={() => this.props.navigation.navigate('PersonalChat', item)}>
-    //             <View>
-    //                 <Image style={{ height: 60, width: 60, borderRadius: 50 }} source={require('../assets/user.png')} />
-    //             </View>
-    //             <Text style={styles.name}>{item.email}</Text>
-    //         </TouchableOpacity>
-    //     )
-    // }
 
     render() {
-        // console.warn("users", this.state.users)
+        console.warn("selain usaer")
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor="white" barStyle="dark-content" />
@@ -78,9 +62,8 @@ export default class App extends Component {
                     </View>
                 </View>
                 <FlatList
-                    data={this.state.data}
-                    keyExtractor={this._keyExtractor}
-                    renderItem={this._renderItem}
+                    data={this.state.users}
+                    renderItem={this.renderRow}
                     style={styles.flatlist}
                 />
             </View>

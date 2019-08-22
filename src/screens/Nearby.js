@@ -5,16 +5,21 @@ import GetLocation from 'react-native-get-location'
 import firebase from 'firebase'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Database } from '../config/firebase'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class App extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
+            avatar: props.navigation.getParam('avatar'),
+            name: props.navigation.getParam('name'),
+            phone: props.navigation.getParam('phone'),
             mapRegion: null,
             latitude: 0,
             longitude: 0,
             users: [],
-            myid: ''
+            myid: '',
+            allData: ''
         }
         AsyncStorage.getItem('userid', (error, result) => {
             if (result) {
@@ -31,12 +36,7 @@ export default class App extends Component {
     }
 
     updateLocation = async () => {
-        // console.warn("long", this.state.longitude)
-        // console.warn("lat", this.state.latitude)
         Database.ref('/users').orderByChild('id').equalTo(this.state.myid).once('value', (result) => {
-            let data = result.val()
-            // console.warn("datanya: ", data)
-
             Database.ref('/users/' + this.state.myid).update({ latitude: this.state.latitude, longitude: this.state.longitude })
         })
     }
@@ -46,7 +46,11 @@ export default class App extends Component {
         let myid = await AsyncStorage.getItem('userid');
         dbRef.on('child_added', (val) => {
             let person = val.val();
-
+            this.setState((prevState) => {
+                return {
+                    allData: [...prevState.allData, person]
+                }
+            })
             if (person.id === myid) {
                 myid = person.id
             } else {
@@ -59,6 +63,7 @@ export default class App extends Component {
 
         })
     }
+
     getCurrentPosition() {
         GetLocation.getCurrentPosition({
             enableHighAccuracy: true,
@@ -80,14 +85,11 @@ export default class App extends Component {
             })
             .catch(error => {
                 const { code, message } = error;
-                // console.warn(code, message);
+                console.warn(code, message);
             })
     }
 
     render() {
-        // console.warn("longitude", this.state.longitude)
-        // console.warn("latitude", this.state.latitude)
-        // console.warn("user", this.state.users)
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" />
@@ -105,19 +107,17 @@ export default class App extends Component {
                 >
                     {
                         this.state.users.map((item) => {
-                            // console.warn("avatar", item.avatar)
-                            // console.warn("item", item.latitude)
-                            // console.warn("item", item.longitude)
                             return (
                                 <Marker
-                                    draggable
                                     coordinate={{
                                         latitude: item.latitude,
                                         longitude: item.longitude,
                                     }}
                                     title={item.name}
                                     description={`${item.latitude} / ${item.longitude}`}
+                                    onPress={() => this.props.navigation.navigate('FriendProfile', item)}
                                 >
+
                                     <Icon size={55} name={'md-pin'} style={styles.icon} />
                                     <Image
                                         source={{ uri: item.avatar }}

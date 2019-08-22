@@ -3,6 +3,8 @@ package com.chatify;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.imagepicker.ImagePickerPackage;
 import com.github.douglasjunior.reactNativeGetLocation.ReactNativeGetLocationPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -28,6 +30,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFetchBlobPackage(),
+            new ImagePickerPackage(),
             new ReactNativeGetLocationPackage(),
             new MapsPackage(),
             new VectorIconsPackage(),
