@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, TextInput, TouchableOpacity, Image, StyleSheet, StatusBar, Alert, AsyncStorage } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Auth, Database } from '../config/firebase'
+import firebase from 'firebase'
 
 export default class Login extends Component {
     constructor() {
@@ -25,7 +25,7 @@ export default class Login extends Component {
         else if (this.state.password.length < 5) {
             Alert.alert('Error', 'Password Must more than 6 character')
         } else {
-            Database.ref('/users').orderByChild('email').equalTo(email).once('value', (result) => {
+            firebase.database().ref('/users').orderByChild('email').equalTo(email).once('value', (result) => {
                 let data = result.val()
                 console.warn("datanya: ", data)
 
@@ -36,12 +36,11 @@ export default class Login extends Component {
                 }
             })
 
-            await Auth.signInWithEmailAndPassword(email, password)
+            await firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((response) => {
                     console.warn("hasil response", response)
-                    Database.ref('/users/' + response.user.uid).update({ status: 'online' })
+                    firebase.database().ref('/users/' + response.user.uid).update({ status: 'online' })
                     AsyncStorage.setItem('userid', response.user.uid)
-                    AsyncStorage.setItem('phone', response.user.phone)
                     this.props.navigation.navigate('Home')
                 })
                 .catch((error) => {

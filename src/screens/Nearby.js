@@ -1,25 +1,19 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, StatusBar, Image, AsyncStorage, Text } from 'react-native';
+import { StyleSheet, View, StatusBar, Image, AsyncStorage } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import GetLocation from 'react-native-get-location'
-import firebase from 'firebase'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { Database } from '../config/firebase'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import firebase from '../config/firebase'
 
 export default class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            avatar: props.navigation.getParam('avatar'),
-            name: props.navigation.getParam('name'),
-            phone: props.navigation.getParam('phone'),
             mapRegion: null,
             latitude: 0,
             longitude: 0,
             users: [],
             myid: '',
-            allData: ''
         }
         AsyncStorage.getItem('userid', (error, result) => {
             if (result) {
@@ -36,8 +30,8 @@ export default class App extends Component {
     }
 
     updateLocation = async () => {
-        Database.ref('/users').orderByChild('id').equalTo(this.state.myid).once('value', (result) => {
-            Database.ref('/users/' + this.state.myid).update({ latitude: this.state.latitude, longitude: this.state.longitude })
+        firebase.database().ref('/users').orderByChild('id').equalTo(this.state.myid).once('value', (result) => {
+            firebase.database().ref('/users/' + this.state.myid).update({ latitude: this.state.latitude, longitude: this.state.longitude })
         })
     }
 
@@ -46,11 +40,6 @@ export default class App extends Component {
         let myid = await AsyncStorage.getItem('userid');
         dbRef.on('child_added', (val) => {
             let person = val.val();
-            this.setState((prevState) => {
-                return {
-                    allData: [...prevState.allData, person]
-                }
-            })
             if (person.id === myid) {
                 myid = person.id
             } else {

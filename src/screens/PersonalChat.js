@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TextInput, AsyncStorage, Image } from 'react-native';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
-import firebase from 'firebase'
+import firebase from '../config/firebase'
 
 export default class App extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -82,7 +82,7 @@ export default class App extends Component {
             let message = {
                 message: this.state.textMessage,
                 time: firebase.database.ServerValue.TIMESTAMP,
-                from: myid
+                from: myid,
             }
             updates['message/' + myid + '/' + uid + '/' + msgid] = message
             updates['message/' + uid + '/' + myid + '/' + msgid] = message

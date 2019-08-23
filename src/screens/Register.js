@@ -3,7 +3,7 @@ import { Text, View, TextInput, TouchableOpacity, StyleSheet, StatusBar } from '
 import GetLocation from 'react-native-get-location'
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Database, Auth } from '../config/firebase'
+import firebase from '../config/firebase'
 
 export default class Login extends Component {
     state = {
@@ -56,10 +56,10 @@ export default class Login extends Component {
         } else if (this.state.name < 4) {
             alert('Username must more than 3 character')
         } else {
-            Auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
+            firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
                 .then((response) => {
                     console.warn(response)
-                    Database.ref('/users/' + response.user.uid).set({
+                    firebase.database().ref('/users/' + response.user.uid).set({
                         id: response.user.uid,
                         name: this.state.name,
                         email: this.state.email,

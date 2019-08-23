@@ -4,7 +4,7 @@ import { createMaterialBottomTabNavigator } from "react-navigation-material-bott
 import Icon from 'react-native-vector-icons/Ionicons';
 
 //import screen
-import Home from '../screens/Home'
+// import Home from '../screens/Home
 import Login from '../screens/Login'
 import Nearby from '../screens/Nearby'
 import FriendList from '../screens/FriendList'
@@ -13,17 +13,8 @@ import Profile from '../screens/Profile'
 import PersonalChat from '../screens/PersonalChat'
 import SplashScreen from '../screens/SplashScreen'
 import Register from '../screens/Register'
-import Tes from '../screens/tesupload'
 
 const BottomNavigator = createMaterialBottomTabNavigator({
-    // Home: {
-    //     screen: Home,
-    //     navigationOptions: {
-    //         tabBarIcon: ({ tintColor }) => (
-    //             <Icon size={30} name={'md-home'} style={{ color: tintColor }} />
-    //         )
-    //     }
-    // },
     Nearby: {
         screen: Nearby,
 
@@ -73,9 +64,6 @@ const AppStack = createStackNavigator({
     },
     FriendProfile: {
         screen: FriendProfile
-    },
-    Tes: {
-        screen: Tes
     }
 });
 

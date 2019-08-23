@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, AsyncStorage, TouchableOpacity, Image } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'rn-fetch-blob'
-import { Auth, Database, Storage } from '../config/firebase'
+import firebase from '../config/firebase'
 
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
@@ -40,8 +40,8 @@ export default class App extends Component {
 
     _logOut = async () => {
         // console.warn("userid", this.state.myid)
-        Database.ref('/users/' + this.state.myid).update({ status: 'offline' })
-        Auth.signOut().then(() => {
+        firebase.database().ref('/users/' + this.state.myid).update({ status: 'offline' })
+        firebase.auth().signOut().then(() => {
             AsyncStorage.clear();
             this.props.navigation.navigate('SplashScreen')
         })
@@ -55,7 +55,7 @@ export default class App extends Component {
     }
 
     getData = async () => {
-        let dbRef = Database.ref('users');
+        let dbRef = firebase.database().ref('users');
         let myid = await AsyncStorage.getItem('userid');
         dbRef.on('child_added', (val) => {
             let person = val.val();
@@ -76,7 +76,7 @@ export default class App extends Component {
             const uploadUri = uri
             let uploadBlob = null
 
-            const imageRef = Storage.ref('posts').child(imgSource)
+            const imageRef = firebase.storage().ref('posts').child(imgSource)
             fs.readFile(uploadUri, 'base64')
                 .then((data) => {
                     return Blob.build(data, { type: `${mime};BASE64` })
@@ -91,7 +91,7 @@ export default class App extends Component {
                 })
                 .then((url) => {
                     resolve(url)
-                    Database.ref('/users/' + this.state.myid).update({ avatar: url })
+                    firebase.database().ref('/users/' + this.state.myid).update({ avatar: url })
                     this.setState({
                         imgSource: ''
                     })

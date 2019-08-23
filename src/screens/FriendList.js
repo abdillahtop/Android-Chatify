@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, Image, FlatList, AsyncStorage } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import firebase from 'firebase'
+import firebase from '../config/firebase'
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Firendlist extends Component {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, Image, FlatList, AsyncStorage } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Auth, Database } from '../config/firebase'
+import firebase from '../config/firebase'
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class App extends Component {
@@ -14,13 +14,38 @@ export default class App extends Component {
 
     }
 
-    componentWillMount = async () => {
-        let dbRef = Database.ref('users');
-        // console.warn("dbref", dbRef)
+    // componentWillMount = async () => {
+    //     let dbRef = firebase.database().ref('users');
+    //     // console.warn("dbref", dbRef)
+    //     let myid = await AsyncStorage.getItem('userid');
+    //     dbRef.on('child_added', (val) => {
+    //         let person = val.val();
+    //         // console.warn("person", person)
+    //         // console.warn("email", myid)
+    //         if (person.id === myid) {
+    //             myid = person.id
+    //         } else {
+    //             this.setState((prevState) => {
+    //                 return {
+    //                     users: [...prevState.users, person]
+    //                 }
+    //             })
+    //         }
+    //     })
+    // }
+
+    componentDidMount = () => {
+        this.focusListener = this.props.navigation.addListener('didFocus', () => {
+            this.getMessage()
+        });
+
+    }
+    getMessage = async () => {
         let myid = await AsyncStorage.getItem('userid');
+        let dbRef = firebase.database().ref('message').child(myid).orderByChild('time')
+        // console.warn("dbref", dbRef)
         dbRef.on('child_added', (val) => {
             let person = val.val();
-            // console.warn("person", person)
             // console.warn("email", myid)
             if (person.id === myid) {
                 myid = person.id
@@ -35,18 +60,18 @@ export default class App extends Component {
     }
 
     renderRow = ({ item }) => {
+        console.warn("item", item)
         return (
             <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('PersonalChat', item)}
                 style={{ padding: 10, borderBottomColor: '#ccc', borderBottomWidth: 1 }}>
-                <Text style={{ fontSize: 20 }}>{item.name}</Text>
+                <Text style={{ fontSize: 20 }}>{item.from}</Text>
             </TouchableOpacity>
         )
     }
 
 
     render() {
-        console.warn("selain usaer")
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor="white" barStyle="dark-content" />
