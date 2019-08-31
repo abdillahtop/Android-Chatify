@@ -17,10 +17,10 @@
 - [Release APK](#release-apk)
 - [Contributors](#contributors)
 
-## Introduce
+## Introduction
 Chatify is a simple chat application, Everyone can use it easily. in this Chatify the user can also see the position of the other person in the chat. There is a Firend List feature that we can use to see how many friends we have.
 
-## Feature
+## Features
 * People can send to othe people
 * there is a map to find out the position of our chat opponent
 * friend list
@@ -32,7 +32,7 @@ Chatify is a simple chat application, Everyone can use it easily. in this Chatif
 * [`react-native-cli`](https://facebook.github.io/react-native/docs/getting-started)
 * [`Firebase Console`](https://console.firebase.google.com)
 
-## For Development
+## Usage For Development
 1. Open your terminal
 2. Copy and Paste here `git clone https://github.com/abdillahtop/Android-Chatify.git`
 3. cd `Android-Chatify` type `npm install` for install dependencies and `react-native link`
